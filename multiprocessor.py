@@ -1,5 +1,8 @@
+import logging
 from math import ceil, floor
-from multiprocessing import cpu_count, Process
+from multiprocessing import Process
+
+import properties
 
 
 def __get_additional_number_of_files__(num_elem, num_proc):
@@ -19,8 +22,8 @@ def __get_additional_number_of_files__(num_elem, num_proc):
 
 
 def __prepare_multiprocessing__(navigation_pages, target_func, parse_func, write_func):
-    num_cpu = cpu_count()
-    print(f"cpu: {num_cpu}")
+    num_cpu = properties.NUM_CPU
+    logging.info(f"cpu: {num_cpu}")
 
     num_navigation_pages = len(navigation_pages)
     num_pages_in_thread = int(num_navigation_pages / num_cpu)
