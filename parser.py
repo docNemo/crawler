@@ -8,6 +8,7 @@ from lxml import etree
 from lxml.etree import XPath
 from requests import get
 
+import properties
 from Article import Article
 from utils import prepare_url
 from xml_builder import build_xml
@@ -40,14 +41,12 @@ def __prepared_text__(page):
     return sub(r"(\s)+", r"\g<1>", str(text_without_text).strip())
 
 
-def __get_creator_data__(page_url, is_last):
-    request = page_url + "?action=history&limit=1"
-    if is_last:
-        request += "&dir=prev"
-    author_page = etree.HTML(get(prepare_url(request)).content)
-    author_name = GET_AUTHOR(author_page)[0]
-    edit_date = GET_DATE(author_page)[0]
-    return author_name, edit_date
+def __get_creator_data__(page_url):
+    request = page_url + properties.CREATOR_REQUEST_PARAM
+    creator_page = etree.HTML(get(prepare_url(request)).content)
+    creator_name = GET_AUTHOR(creator_page)[0]
+    creation_date = GET_DATE(creator_page)[0]
+    return creator_name, creation_date
 
 
 def parse_to_xml(page_url):
@@ -63,8 +62,8 @@ def parse_to_xml(page_url):
     if not text:
         return None # Это несуществующая статья
 
-    author, creation_date = __get_creator_data__(page_url, False)
+    creator, creation_date = __get_creator_data__(page_url)
 
     category = '/'.join(GET_CATEGORIES(page))
 
-    return build_xml(Article(category, author, creation_date, title, text))
+    return build_xml(Article(category, creator, creation_date, title, text))

@@ -1,5 +1,5 @@
 class Article:
-    __category__ = None
+    __categories__ = None
     __creator__ = None
     __creation_date__ = None
     __title__ = None
@@ -7,21 +7,21 @@ class Article:
 
     def __init__(
             self,
-            category,
+            categories,
             creator,
             creation_date,
             title,
             text
 
     ):
-        self.__category__ = category
+        self.__categories__ = categories
         self.__creator__ = creator
         self.__creation_date__ = creation_date
         self.__title__ = title
         self.__text__ = text
 
-    def get_category(self):
-        return self.__category__
+    def get_categories(self):
+        return self.__categories__
 
     def get_creator(self):
         return self.__creator__
