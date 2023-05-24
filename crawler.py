@@ -14,7 +14,7 @@ from properties import START_PAGE, BASE_DOMAIN_FORMAT
 from xml_writer import write_xml
 
 GET_NEXT_NAVIGATION_PAGE_URL = XPath("//div[@class='mw-allpages-nav']/a[starts-with(text(),'Следующая')]/@href")
-GET_ARTICLE_URL = XPath("//div[@class='mw-allpages-body']/ul/li[@class='allpagesredirect']/a/@href")
+GET_ARTICLE_URL = XPath("//div[@class='mw-allpages-body']//a[not(contains(@class,'mw-redirect'))]")
 
 
 def __get_page_list__():
@@ -25,7 +25,12 @@ def __get_page_list__():
         logging.debug(f"Navigation page: {unquote(navigation_page_url)}")
 
         navigation_page_xml = etree.HTML(get(navigation_page_url).content)
-        all_page_urls += GET_ARTICLE_URL(navigation_page_xml)
+        all_page_urls += list(
+            map(
+                lambda el: (el.attrib["href"], el.text),
+                GET_ARTICLE_URL(navigation_page_xml)
+            )
+        )
 
         next_navigation_page_url = GET_NEXT_NAVIGATION_PAGE_URL(navigation_page_xml)
         if len(next_navigation_page_url) == 0:
@@ -40,8 +45,6 @@ def __get_page_list__():
 def __crawl_pages__(page_urls, parse, write):
     logging.basicConfig(level=properties.LOG_LEVEL)
     logging.info(f"{current_process()} ######### len: {len(page_urls)}")
-    # page_urls = ["https://starwars.fandom.com/ru/wiki/Энакин_Скайуокер/Канон"]
-    # page_urls = ["https://starwars.fandom.com/wiki/Вукипедия:Руководство_для_быстрого_старта"]
     num_articles = 0
     for page_url in page_urls:
         article = parse(page_url)
@@ -59,10 +62,10 @@ def start():
     start_time = datetime.now()
     logging.info(f"Start {start_time}")
 
-    navigation_pages = __get_page_list__()
-    logging.info(f"Num navigation pages: {len(navigation_pages)}")
+    pages = __get_page_list__()
+    logging.info(f"Num pages: {len(pages)}")
     logging.info(f"Start multiproc: {datetime.now()}")
-    start_multiprocessing(navigation_pages, __crawl_pages__, parse_to_xml, write_xml)
+    start_multiprocessing(pages, __crawl_pages__, parse_to_xml, write_xml)
 
     finish_time = datetime.now()
     logging.info(f"Finish {finish_time}")

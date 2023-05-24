@@ -1,7 +1,7 @@
 import os
 import uuid
 
-ARTICLES_DIR_PATH = "article"
+from properties import ARTICLES_DIR_PATH
 
 
 def write_xml(xml):
