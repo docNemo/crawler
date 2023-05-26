@@ -14,7 +14,7 @@ from properties import START_PAGE, BASE_DOMAIN_FORMAT
 from xml_writer import write_xml
 
 GET_NEXT_NAVIGATION_PAGE_URL = XPath("//div[@class='mw-allpages-nav']/a[starts-with(text(),'Следующая')]/@href")
-GET_ARTICLE_URL = XPath("//div[@class='mw-allpages-body']//a[not(contains(@class,'mw-redirect'))]")
+GET_ARTICLE_URLS = XPath("//div[@class='mw-allpages-body']//a[not(contains(@class,'mw-redirect'))]")
 
 
 def __get_page_list__():
@@ -28,7 +28,7 @@ def __get_page_list__():
         all_page_urls += list(
             map(
                 lambda el: (el.attrib["href"], el.text),
-                GET_ARTICLE_URL(navigation_page_xml)
+                GET_ARTICLE_URLS(navigation_page_xml)
             )
         )
 

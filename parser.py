@@ -13,7 +13,7 @@ from Article import Article
 from utils import prepare_url
 from xml_builder import build_xml
 
-GET_ARTICLE_NAME = XPath("//span[@class='mw-page-title-main']/text()|//h1[@class='page-header__title']/text()")
+GET_TITLE = XPath("//span[@class='mw-page-title-main']/text()|//h1[@class='page-header__title']/text()")
 GET_AUTHOR = XPath("//bdi/text()")
 GET_DATE = XPath("//a[contains(@class, 'mw-changeslist-date')]/text()")
 GET_CATEGORIES = XPath("//div[@class='page-header__categories']//a[@href]/text()")
@@ -34,10 +34,6 @@ def __clean_text__(text):
     return list(map(lambda string: string.replace('\n', ' ').replace('\xa0', ' '), text))
 
 
-def __build_header_tag__(element):
-    return "\n<{}>{}</{}>\n".format(element.tag, __clean_text__(element.xpath(".//text()"))[0], element.tag)
-
-
 def clean_str(string):
     return sub(r"(\s)+", r"\g<1>", string.strip())
 
@@ -52,12 +48,6 @@ def __prepared_text__(page):
 
     text_without_tags = content_soup.get_text()
     return clean_str(text_without_tags)
-    # formatted_text = clean_str(text_without_tags)
-
-    # if formatted_text.startswith("Перенаправление на:"):
-    #     return None  # Это статья редирект
-    #
-    # return formatted_text
 
 
 def __get_creator_data__(page_url):
@@ -73,10 +63,9 @@ def parse_to_xml(page_meta):
     logging.info(f"{current_process()} ######### {unquote(page_url)}")
     page = etree.HTML(get(prepare_url(page_url)).content)
 
-    title = list(filter(lambda t: t.strip(), GET_ARTICLE_NAME(page)))
+    title = list(filter(lambda t: t.strip(), GET_TITLE(page)))
     if len(title) == 0:
         return None  # Это несуществующая статья
-    title = clean_str(title[0])
 
     text = __prepared_text__(page)
     if not text:
