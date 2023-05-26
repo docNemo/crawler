@@ -1,9 +1,9 @@
 class Article:
-    __categories__ = None
-    __creator__ = None
-    __creation_date__ = None
-    __title__ = None
-    __text__ = None
+    __categories = None
+    __creator = None
+    __creation_date = None
+    __title = None
+    __text = None
 
     def __init__(
             self,
@@ -14,23 +14,23 @@ class Article:
             text
 
     ):
-        self.__categories__ = categories
-        self.__creator__ = creator
-        self.__creation_date__ = creation_date
-        self.__title__ = title
-        self.__text__ = text
+        self.__categories = categories
+        self.__creator = creator
+        self.__creation_date = creation_date
+        self.__title = title
+        self.__text = text
 
     def get_categories(self):
-        return self.__categories__
+        return self.__categories
 
     def get_creator(self):
-        return self.__creator__
+        return self.__creator
 
     def get_creation_date(self):
-        return self.__creation_date__
+        return self.__creation_date
 
     def get_title(self):
-        return self.__title__
+        return self.__title
 
     def get_text(self):
-        return self.__text__
+        return self.__text

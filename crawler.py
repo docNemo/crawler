@@ -17,7 +17,7 @@ GET_NEXT_NAVIGATION_PAGE_URL = XPath("//div[@class='mw-allpages-nav']/a[starts-w
 GET_ARTICLE_URLS = XPath("//div[@class='mw-allpages-body']//a[not(contains(@class,'mw-redirect'))]")
 
 
-def __get_page_list__():
+def __get_page_list():
     navigation_page_url = START_PAGE
     all_page_urls = []
 
@@ -42,7 +42,7 @@ def __get_page_list__():
     return all_page_urls
 
 
-def __crawl_pages__(page_urls, parse, write):
+def __crawl_pages(page_urls, parse, write):
     logging.basicConfig(level=properties.LOG_LEVEL)
     logging.info(f"{current_process()} ######### len: {len(page_urls)}")
     num_articles = 0
@@ -62,10 +62,10 @@ def start():
     start_time = datetime.now()
     logging.info(f"Start {start_time}")
 
-    pages = __get_page_list__()
+    pages = __get_page_list()
     logging.info(f"Num pages: {len(pages)}")
     logging.info(f"Start multiproc: {datetime.now()}")
-    start_multiprocessing(pages, __crawl_pages__, parse_to_xml, write_xml)
+    start_multiprocessing(pages, __crawl_pages, parse_to_xml, write_xml)
 
     finish_time = datetime.now()
     logging.info(f"Finish {finish_time}")

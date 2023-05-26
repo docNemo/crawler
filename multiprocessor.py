@@ -5,7 +5,7 @@ from multiprocessing import Process
 import properties
 
 
-def __get_additional_number_of_files__(num_elem, num_proc):
+def __get_additional_number_of_files(num_elem, num_proc):
     average = num_elem / num_proc
     max_num = int(ceil(average))
     min_num = int(floor(average))
@@ -21,13 +21,13 @@ def __get_additional_number_of_files__(num_elem, num_proc):
         yield 0
 
 
-def __prepare_multiprocessing__(navigation_pages, target_func, parse_func, write_func):
+def __prepare_multiprocessing(navigation_pages, target_func, parse_func, write_func):
     num_cpu = properties.NUM_CPU
     logging.info(f"cpu: {num_cpu}")
 
     num_navigation_pages = len(navigation_pages)
     num_pages_in_thread = int(num_navigation_pages / num_cpu)
-    additional_number_of_files = __get_additional_number_of_files__(num_navigation_pages, num_cpu)
+    additional_number_of_files = __get_additional_number_of_files(num_navigation_pages, num_cpu)
 
     last_ind = 0
     processes = []
@@ -49,7 +49,7 @@ def __prepare_multiprocessing__(navigation_pages, target_func, parse_func, write
 
 
 def start_multiprocessing(navigation_pages, target_func, parse_func, write_func):
-    processes = __prepare_multiprocessing__(navigation_pages, target_func, parse_func, write_func)
+    processes = __prepare_multiprocessing(navigation_pages, target_func, parse_func, write_func)
     for process in processes:
         process.start()
     for process in processes:

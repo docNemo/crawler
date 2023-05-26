@@ -30,7 +30,7 @@ IGNORE_CATEGORIES = [
 ]
 
 
-def __clean_text__(text):
+def __clean_text(text):
     return list(map(lambda string: string.replace('\n', ' ').replace('\xa0', ' '), text))
 
 
@@ -38,7 +38,7 @@ def clean_str(string):
     return sub(r"(\s)+", r"\g<1>", string.strip())
 
 
-def __prepared_text__(page):
+def __prepared_text(page):
     raw_text = GET_TEXT(page)
     if len(raw_text) == 0:
         return None
@@ -50,7 +50,7 @@ def __prepared_text__(page):
     return clean_str(text_without_tags)
 
 
-def __get_creator_data__(page_url):
+def __get_creator_data(page_url):
     request = page_url + properties.CREATOR_REQUEST_PARAM
     creator_page = etree.HTML(get(prepare_url(request)).content)
     creator_name = GET_AUTHOR(creator_page)[0]
@@ -67,11 +67,11 @@ def parse_to_xml(page_meta):
     if len(title) == 0:
         return None  # Это несуществующая статья
 
-    text = __prepared_text__(page)
+    text = __prepared_text(page)
     if not text:
         return None  # Это несуществующая статья
 
-    creator, creation_date = __get_creator_data__(page_url)
+    creator, creation_date = __get_creator_data(page_url)
 
     raw_categories = GET_CATEGORIES(page)
     if len(raw_categories) == 0:
